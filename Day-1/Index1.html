@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>Buggy Code</div>
+    <div id="container">
+        
+    </div>
+
+   <div>Solution</div>
+   
+    <div id="container1">
+        
+    </div>
+</body>
+</html>
+<script>
+
+
+
+     let div = document.getElementById("container")
+     for(var i = 1; i<=5; i++){
+        let button = document.createElement("button")
+        button.innerText = `Button ${i}`
+        button.addEventListener("click" , ()=>{
+             alert(`Button ${i} is clicked` )
+        })
+        div.appendChild(button)
+     }
+      
+
+
+     for(var i=1; i<=5; i++){
+         factory(i)
+     }
+     function factory(i){
+       let div1 = document.getElementById("container1")
+       let button1 = document.createElement("button")
+       button1.innerText = `button ${i}`
+       button1.addEventListener("click" , ()=>{
+             alert(`Button ${i} is clicked` )
+        })
+        div1.appendChild(button1)
+     }
+
+</script>

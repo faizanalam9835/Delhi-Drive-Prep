@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="button">
+      <button onclick="TestHoisting()">Test Hoisting</button>
+      <div id="div">
+          
+      </div>
+
+    </div>
+  </div>
+
+  <script >
+     const TestHoisting = () =>{
+      const div = document.getElementById("div")
+      div.innerHTML = ""
+
+      div.innerHTML += `var check : ${name} <br>`
+      console.log(name)
+      try {
+        div.innerHTML += `let check : ${faizan} <br>`
+        console.log("let check" + faizan)
+      } catch (error) {
+        div.innerHTML += `Let check Error : ${error} <br>`
+        console.log("TDz Error" + error)
+      }
+       
+
+      try {
+        div.innerHTML += `const check : ${arhan} <br> `
+        console.log("const check" + arhan)
+      } catch (error) {
+        div.innerHTML += `const check Error : ${error} <br>`
+        console.log("TDz Error" + error)
+      }
+
+      var name = "name for name"
+      let faizan = "faizan for let"
+      const arhan = "arhan for cont"
+     }
+  </script>
+</body>
+</html>

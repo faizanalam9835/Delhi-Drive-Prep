@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    .container{
+        height: 50vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .buttons{
+        
+        height: 100px;
+        width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    #div{
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: maroon;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+    .btn{
+        height: 40px;
+        border-radius: 5px;
+        background-color: aliceblue;
+        color: maroon;
+    }
+</style>
+<body>
+  <div class="container">
+    <div id="div">
+          
+    </div>
+    <div class="buttons">
+      <button class="btn" onclick="increase()">Increase</button>
+      <button class="btn" onclick="decrease()">Decrease</button>
+    </div>
+  </div>
+  <script>
+    const createCounter = () =>{
+      let div = document.getElementById("div")
+       let count = 0
+       div.innerHTML = ` <h3>count : ${count}</h3>`
+       console.log(count)
+       return {
+        increament:() =>{
+            count++
+            div.innerHTML = `<h3>count : ${count}</h3>`
+        },
+        decreament:() =>{
+            if(count > 0){
+            count--
+            console.log(count)
+            div.innerHTML = `<h3>count : ${count}</h3>`
+            }
+        },
+        getcount:() =>{
+            console.log(count)
+        },
+       }
+    }
+
+  let counter = createCounter()
+  let increase = counter.increament
+  let decrease = counter.decreament
+
+  </script>
+</body>
+</html>

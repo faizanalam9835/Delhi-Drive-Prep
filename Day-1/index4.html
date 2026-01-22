@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container{
+        height: 95vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+</style>
+<body>
+     <div id="container">
+       
+
+        {
+        <br>
+        let x = 10;
+        <br>
+        console.log(x);
+        <br>
+        }
+        <br>
+        <br>
+        <br>
+        try {
+            <br>
+            <br>
+          console.log(x)
+          <br>
+          <br>
+        } catch (error) {
+           <br>
+           <br>
+           console.log("error" + error)
+           <br>
+           <br>
+        }
+        <br>
+        <br>
+        <Button onclick="Visualise()">Visualise Code</Button>
+     </div>
+</body>
+</html>
+
+<script>
+    let Visualise = () => {
+    let div = document.getElementById("container")
+    div.innerHTML = "" 
+    {
+        let x = 10
+        console.log(x)
+        div.innerHTML += `Inside Block value of X: ${x}<br>`
+    }
+
+    try {
+       console.log(x) 
+    } catch (error) {
+        console.log(error)
+        div.innerHTML += `In other block value of X : ${error}`
+    }
+
+    }
+
+
+</script>

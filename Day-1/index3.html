@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <Button onclick="Showtime()">Stop Watch</Button>
+        </div>
+    </div>
+</body>
+</html>
+<Script>
+      const StopWatch = () =>{
+        let count = 0
+        let time
+          return{
+              startCounter:()=>{
+                time = setInterval(() =>{
+                    count++
+                 },1000)
+                 
+              },
+              clearWatch:()=>{
+                 alert(`The Time after render the ui is : ${count}`)
+                 clearInterval(time)
+              }
+          }
+       }
+
+       let watch = StopWatch()
+       watch.startCounter()
+       let Showtime = watch.clearWatch
+</Script>
