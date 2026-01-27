@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 12px;
+    }
+    main {
+      padding: 15px;
+    }
+    input, select, button {
+      padding: 6px;
+      margin: 4px 0;
+    }
+    .auth-row,
+    .filter-row {
+      margin-bottom: 8px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .product-card {
+      background: white;
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .product-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+    }
+    .page-buttons button {
+      margin-right: 5px;
+    }
+    .cart-box,
+    .debug-box {
+      background: white;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h2>ShopQuest</h2>
+  <div id="loginStatus">Not logged in</div>
+</header>
+<main>
+  <div class="auth-row">
+    <input id="userNameInput" placeholder="Username">
+    <input id="passwordInput" type="password" placeholder="Password">
+    <button id="loginButton">Login</button>
+    <button id="logoutButton">Logout</button>
+  </div>
+  <div class="filter-row">
+    <input id="searchBox" placeholder="Search products">
+    <select id="priceSort">
+      <option value="">Sort by price</option>
+      <option value="asc">Low to High</option>
+      <option value="desc">High to Low</option>
+    </select>
+  </div>
+  <div id="loadStatus"></div>
+  <div class="product-grid" id="productGrid"></div>
+  <div class="page-buttons" id="pageButtons"></div>
+  <div class="cart-box" id="cartBox"></div>
+  <button id="checkoutButton">Checkout</button>
+  <div class="debug-box">
+    <strong>Dev Panel</strong>
+  </div>
+</main>
+<script>
+const api = "https://fakestoreapi.com"
+let products = []
+let visibleProducts = []
+let cartItems = JSON.parse(localStorage.getItem("cart")) || []
+let authToken = localStorage.getItem("token") || null
+let currentPage = 1
+let itemsPerPage = 6
+function getProducts() {
+  loadStatus.innerText = "Loading products..."
+  fetch(api + "/products")
+    .then(res => res.json())
+    .then(data => {
+      products = data
+      visibleProducts = data.slice()
+      localStorage.setItem("productCache", JSON.stringify(data))
+      loadStatus.innerText = ""
+      drawProducts()
+    })
+    .catch(() => {
+      products = JSON.parse(localStorage.getItem("productCache")) || []
+      visibleProducts = products.slice()
+      loadStatus.innerText = "Offline mode"
+      drawProducts()
+    })
+}
+function drawProducts() {
+  productGrid.innerHTML = ""
+  let start = (currentPage - 1) * itemsPerPage
+  let end = start + itemsPerPage
+  visibleProducts.slice(start, end).forEach(item => {
+    let card = document.createElement("div")
+    card.className = "product-card"
+    card.innerHTML = `
+      <img src="${item.image}">
+      <h4>${item.title}</h4>
+      <p>$${item.price}</p>
+    `
+    let btn = document.createElement("button")
+    btn.innerText = "Add to cart"
+    btn.onclick = function () {
+      addToCart(item)
+    }
+    card.appendChild(btn)
+    productGrid.appendChild(card)
+  })
+
+  drawPages()
+}
+function drawPages() {
+  pageButtons.innerHTML = ""
+  let totalPages = Math.ceil(visibleProducts.length / itemsPerPage)
+  for (let i = 1; i <= totalPages; i++) {
+    let btn = document.createElement("button")
+    btn.innerText = i
+    btn.onclick = function () {
+      currentPage = i
+      drawProducts()
+    }
+    pageButtons.appendChild(btn)
+  }
+}
+searchBox.oninput = function () {
+  let text = this.value.toLowerCase()
+  visibleProducts = products.filter(p =>
+    p.title.toLowerCase().includes(text)
+  )
+  currentPage = 1
+  drawProducts()
+}
+priceSort.onchange = function () {
+  if (this.value === "asc") {
+    visibleProducts.sort((a, b) => a.price - b.price)
+  }
+  if (this.value === "desc") {
+    visibleProducts.sort((a, b) => b.price - a.price)
+  }
+  drawProducts()
+}
+function addToCart(item) {
+  cartItems.push(item)
+  localStorage.setItem("cart", JSON.stringify(cartItems))
+  drawCart()
+}
+function drawCart() {
+  cartBox.innerHTML = "<strong>Cart</strong>"
+  cartItems.forEach((item, index) => {
+    let row = document.createElement("p")
+    row.innerText = item.title
+    row.onclick = function () {
+      cartItems.splice(index, 1)
+      localStorage.setItem("cart", JSON.stringify(cartItems))
+      drawCart()
+    }
+    cartBox.appendChild(row)
+  })
+}
+function loginUser() {
+  fetch(api + "/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: userNameInput.value,
+      password: passwordInput.value
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      authToken = data.token
+      localStorage.setItem("token", authToken)
+      updateLoginStatus()
+    })
+}
+function updateLoginStatus() {
+  loginStatus.innerText = authToken ? "Logged in" : "Not logged in"
+}
+function placeOrder() {
+  if (!authToken) {
+    alert("Please login first")
+    return
+  }
+  fetch(api + "/carts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + authToken
+    },
+    body: JSON.stringify({
+      userId: 1,
+      date: new Date(),
+      products: cartItems.map(p => ({
+        productId: p.id,
+        quantity: 1
+      }))
+    })
+  })
+    .then(() => {
+      alert("Order placed")
+      cartItems = []
+      localStorage.removeItem("cart")
+      drawCart()
+    })
+}
+loginButton.onclick = loginUser
+logoutButton.onclick = function () {
+  authToken = null
+  localStorage.removeItem("token")
+  updateLoginStatus()
+}
+checkoutButton.onclick = placeOrder
+updateLoginStatus()
+drawCart()
+getProducts()
+</script>
+</body>
+</html>
