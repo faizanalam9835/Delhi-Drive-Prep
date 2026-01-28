@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Document</title>
+
+  <style>
+    body { 
+        font-family: Arial; 
+        margin:0; background:#f4f4f4 
+    }
+    header { 
+        background:#222; 
+        color:white; padding:10px; 
+        display:flex; 
+        gap:10px 
+    }
+    main { 
+        padding:15px 
+    }
+    .post { 
+        background:white; 
+        padding:12px;
+        margin-bottom:10px; 
+        cursor:pointer 
+    }
+    .highlight { 
+        border-left:5px solid RED 
+    }
+    footer { 
+        text-align:center; 
+        padding:10px 
+    }
+    #modal { 
+        position:fixed; 
+        inset:0; 
+        background:rgba(0,0,0,.6); 
+        padding:30px 
+    }
+    #modal > div {
+     background:white; 
+     padding:20px }
+    .hidden { 
+     display:none 
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <input id="search" placeholder="Search..." />
+  <select id="mode">
+    <option value="full">Full</option>
+    <option value="title">Title</option>
+    <option value="fuzzy">Fuzzy</option>
+  </select>
+
+  <label><input type="checkbox" id="long"> Long</label>
+  <label><input type="checkbox" id="sort"> Sort by comments</label>
+</header>
+
+<main id="feed"></main>
+
+<footer>
+  <button id="prev">Prev</button>
+  <span id="page"></span>
+  <button id="next">Next</button>
+</footer>
+
+<div id="modal" class="hidden"></div>
+
+
+</body>
+</html>
+<script src="app.js"></script>
